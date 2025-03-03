@@ -18,8 +18,12 @@ const updateContacts = async (contacts) => {
  * @returns {Array<Object>} An array of contact objects
  */
 export async function listContacts() {
-  const data = await readFile(contactsPath);
-  return JSON.parse(data);
+  try {
+    const data = await readFile(contactsPath);
+    return JSON.parse(data);
+  } catch (error) {
+    console.error("Error readding the contacts file", error.message);
+  }
 }
 
 /**
