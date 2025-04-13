@@ -1,45 +1,29 @@
-import { readFile, writeFile } from "node:fs/promises";
-import path from "node:path";
-import { nanoid } from "nanoid";
+import Contact from "../db/models/Contact.js";
 
-const contactsPath = path.resolve("db", "contacts.json");
+export const listContacts = () => Contact.findAll();
 
-const updateContacts = async (contacts) => {
-  await writeFile(contactsPath, JSON.stringify(contacts, null, 2));
+export const getContactById = async (contactId) =>
+  await Contact.findByPk(contactId);
+
+export const addContact = async (contactData) =>
+  await Contact.create(contactData);
+
+export const updateContact = async (contactId, contactData) => {
+  const contact = await getContactById(contactId);
+  if (!contact) return null;
+  return contact.update(contactData, { returning: true });
 };
 
-export async function listContacts() {
-  const data = await readFile(contactsPath);
-  return JSON.parse(data);
-}
+export const updateStatusContact = async (contactId, body) => {
+  const contact = await getContactById(contactId);
+  if (!contact) return null;
+  return contact.update(body, { returning: true });
+};
 
-export async function getContactById(contactId) {
-  const contacts = await listContacts();
-  return contacts.find((contact) => contact.id === contactId) || null;
-}
-
-export async function addContact(contactData) {
-  const contacts = await listContacts();
-  const newContact = { ...contactData, id: nanoid() };
-  contacts.push(newContact);
-  await updateContacts(contacts);
-  return newContact;
-}
-
-export async function updateContact(contactId, contactData) {
-  const contacts = await listContacts();
-  const index = contacts.findIndex((contact) => contact.id === contactId);
-  if (index === -1) return null;
-  contacts[index] = { ...contacts[index], ...contactData };
-  await updateContacts(contacts);
-  return contacts[index];
-}
-
-export async function removeContact(contactId) {
-  const contacts = await listContacts();
-  const index = contacts.findIndex((contact) => contact.id === contactId);
-  if (index === -1) return null;
-  const [removedContact] = contacts.splice(index, 1);
-  await updateContacts(contacts);
-  return removedContact;
-}
+export const removeContact = async (contactId) => {
+  Contact.destroy({
+    where: {
+      id: contactId,
+    },
+  });
+};
