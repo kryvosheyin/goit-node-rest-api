@@ -1,5 +1,3 @@
-import { ValidationError } from "sequelize";
-
 const errorHandler = (handler) => {
   const func = async (req, res, next) => {
     try {

@@ -3,8 +3,16 @@ import HttpError from "../helpers/HttpError.js";
 
 const getAllContacts = async (req, res) => {
   const { id: owner } = req.user;
-  const contacts = await contactsService.listContacts({ owner });
-  res.json(contacts);
+
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 20;
+  const offset = (page - 1) * limit;
+
+  const { rows: contacts, count: total } = await contactsService.listContacts(
+    { owner },
+    { offset, limit }
+  );
+  res.json({ total, page, limit, contacts });
 };
 
 const getOneContact = async (req, res) => {

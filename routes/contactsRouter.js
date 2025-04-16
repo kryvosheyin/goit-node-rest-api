@@ -7,7 +7,6 @@ import {
 } from "../schemas/contactsSchemas.js";
 import errorHandler from "../decorators/errorHandler.js";
 import authenticate from "../middlewares/authenticate.js";
-import contactsControllers from "../controllers/contactsControllers.js";
 
 const contactsRouter = express.Router();
 
