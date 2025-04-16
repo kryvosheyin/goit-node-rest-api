@@ -8,8 +8,14 @@ const getAllContacts = async (req, res) => {
   const limit = parseInt(req.query.limit) || 20;
   const offset = (page - 1) * limit;
 
+  const filter = { owner };
+
+  if (req.query.favorite !== undefined) {
+    filter.favorite = req.query.favorite === "true";
+  }
+
   const { rows: contacts, count: total } = await contactsService.listContacts(
-    { owner },
+    filter,
     { offset, limit }
   );
   res.json({ total, page, limit, contacts });
