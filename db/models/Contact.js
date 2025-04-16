@@ -9,7 +9,6 @@ const Contact = sequelize.define("contact", {
   },
   email: {
     type: DataTypes.STRING,
-    unique: true,
     validate: {
       is: emailRegex,
     },

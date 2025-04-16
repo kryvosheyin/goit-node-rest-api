@@ -10,7 +10,7 @@ export const getAllContacts = async (req, res) => {
 export const getOneContact = async (req, res) => {
   const { id } = req.params;
   const { id: owner } = req.user;
-  const contact = await contactsService.getContactById({ id, owner });
+  const contact = await contactsService.getContact({ id, owner });
   if (!contact) {
     throw HttpError(404);
   }
@@ -20,7 +20,7 @@ export const getOneContact = async (req, res) => {
 export const deleteContact = async (req, res) => {
   const { id } = req.params;
   const { id: owner } = req.user;
-  const contact = await contactsService.getContactById({ id, owner });
+  const contact = await contactsService.getContact({ id, owner });
   if (!contact) {
     throw HttpError(404);
   }

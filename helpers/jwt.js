@@ -18,7 +18,7 @@ export const verifyToken = (token) => {
   } catch (error) {
     return {
       payload: null,
-      error: error.message,
+      error,
     };
   }
 };

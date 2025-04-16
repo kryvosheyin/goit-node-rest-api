@@ -24,7 +24,7 @@ export const getCurrentUserController = async (req, res) => {
 export const userLogoUtController = async (req, res) => {
   const { id } = req.user;
   await signUpServices.invalidateUserToken(id);
-  res.status(401).json({ message: "Logout success" });
+  res.status(204).json();
 };
 
 export default {

@@ -47,7 +47,7 @@ export const signInUser = async (userData) => {
 
 export const invalidateUserToken = async (userId) => {
   const user = await findUser({ id: userId });
-  if (!use || !user.token) {
+  if (!user || !user.token) {
     throw HttpError(401, "Not authorized");
   }
   await user.update({ token: null });
