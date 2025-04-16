@@ -1,11 +1,6 @@
 import exrepress from "express";
 import validateBody from "../helpers/validateBody.js";
-import {
-  signUpController,
-  signInController,
-  getCurrentUserController,
-  userLogoUtController,
-} from "../controllers/authController.js";
+import authController from "../controllers/authController.js";
 
 import authenticate from "../middlewares/authenticate.js";
 
@@ -17,21 +12,31 @@ const authRouter = exrepress.Router();
 authRouter.post(
   "/register",
   validateBody(signUpSchema),
-  errorHandler(signUpController)
+  errorHandler(authController.signUpController)
 );
 
 authRouter.post(
   "/login",
   validateBody(signInSchema),
-  errorHandler(signInController)
+  errorHandler(authController.signInController)
 );
 
 authRouter.get(
   "/current",
   authenticate,
-  errorHandler(getCurrentUserController)
+  errorHandler(authController.getCurrentUserController)
 );
 
-authRouter.post("/logout", authenticate, errorHandler(userLogoUtController));
+authRouter.post(
+  "/logout",
+  authenticate,
+  errorHandler(authController.userLogoUtController)
+);
+
+authRouter.patch(
+  "/subscription",
+  authenticate,
+  errorHandler(authController.updateSubscriptionController)
+);
 
 export default authRouter;

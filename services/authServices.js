@@ -53,3 +53,12 @@ export const invalidateUserToken = async (userId) => {
   await user.update({ token: null });
   return user;
 };
+
+export const updateSubscription = async (email, subscription) => {
+  const user = await findUser({ email });
+  if (!user) {
+    throw HttpError(404, "User not found");
+  }
+  await user.update({ subscription });
+  return user;
+};

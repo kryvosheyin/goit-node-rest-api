@@ -1,7 +1,7 @@
-import * as signUpServices from "../services/authServices.js";
+import * as authServices from "../services/authServices.js";
 
-export const signUpController = async (req, res) => {
-  const newUser = await signUpServices.signUpUser(req.body);
+const signUpController = async (req, res) => {
+  const newUser = await authServices.signUpUser(req.body);
 
   res.status(201).json({
     email: newUser.email,
@@ -9,22 +9,31 @@ export const signUpController = async (req, res) => {
   });
 };
 
-export const signInController = async (req, res) => {
+const signInController = async (req, res) => {
   const { email, password } = req.body;
-  const token = await signUpServices.signInUser({ email, password });
+  const token = await authServices.signInUser({ email, password });
   res.status(200).json(token);
 };
 
-export const getCurrentUserController = async (req, res) => {
+const getCurrentUserController = async (req, res) => {
   const { email, subscription } = req.user;
 
   res.status(200).json({ email, subscription });
 };
 
-export const userLogoUtController = async (req, res) => {
+const userLogoUtController = async (req, res) => {
   const { id } = req.user;
-  await signUpServices.invalidateUserToken(id);
+  await authServices.invalidateUserToken(id);
   res.status(204).json();
+};
+
+const updateSubscriptionController = async (req, res) => {
+  const { email } = req.user;
+  const { subscription } = req.body;
+  await authServices.updateSubscription(email, subscription);
+  res
+    .status(200)
+    .json({ message: `Subscription for ${email} updated to ${subscription}` });
 };
 
 export default {
@@ -32,4 +41,5 @@ export default {
   signInController,
   getCurrentUserController,
   userLogoUtController,
+  updateSubscriptionController,
 };
