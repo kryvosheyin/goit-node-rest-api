@@ -1,13 +1,13 @@
-import * as contactsService from "../services/contactsServices.js";
+import contactsService from "../services/contactsServices.js";
 import HttpError from "../helpers/HttpError.js";
 
-export const getAllContacts = async (req, res) => {
+const getAllContacts = async (req, res) => {
   const { id: owner } = req.user;
   const contacts = await contactsService.listContacts({ owner });
   res.json(contacts);
 };
 
-export const getOneContact = async (req, res) => {
+const getOneContact = async (req, res) => {
   const { id } = req.params;
   const { id: owner } = req.user;
   const contact = await contactsService.getContact({ id, owner });
@@ -17,7 +17,7 @@ export const getOneContact = async (req, res) => {
   res.json(contact);
 };
 
-export const deleteContact = async (req, res) => {
+const deleteContact = async (req, res) => {
   const { id } = req.params;
   const { id: owner } = req.user;
   const contact = await contactsService.getContact({ id, owner });
@@ -28,13 +28,13 @@ export const deleteContact = async (req, res) => {
   res.json(contact);
 };
 
-export const createContact = async (req, res) => {
+const createContact = async (req, res) => {
   const { id: owner } = req.user;
   const contact = await contactsService.addContact({ ...req.body, owner });
   res.status(201).json(contact);
 };
 
-export const updateContact = async (req, res) => {
+const updateContact = async (req, res) => {
   const { id } = req.params;
   const { id: owner } = req.user;
   validateNotEmptyBody(req.body);
@@ -45,7 +45,7 @@ export const updateContact = async (req, res) => {
   res.json(contact);
 };
 
-export const updateStatusContact = async (req, res) => {
+const updateStatusContact = async (req, res) => {
   const { id } = req.params;
   const { id: owner } = req.user;
   validateNotEmptyBody(req.body);
@@ -63,4 +63,13 @@ const validateNotEmptyBody = (body) => {
   if (Object.keys(body).length === 0) {
     throw HttpError(400, "Body must have at least one field");
   }
+};
+
+export default {
+  getAllContacts,
+  getOneContact,
+  deleteContact,
+  createContact,
+  updateContact,
+  updateStatusContact,
 };

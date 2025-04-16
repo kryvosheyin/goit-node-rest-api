@@ -6,9 +6,9 @@ import { generateToken } from "../helpers/jwt.js";
 
 dotenv.config();
 
-export const findUser = async (query) => User.findOne({ where: query });
+const findUser = async (query) => User.findOne({ where: query });
 
-export const signUpUser = async (userData) => {
+const signUpUser = async (userData) => {
   const { email, password } = userData;
   const existingUser = await findUser({ email });
   if (existingUser) {
@@ -24,7 +24,7 @@ export const signUpUser = async (userData) => {
   return user;
 };
 
-export const signInUser = async (userData) => {
+const signInUser = async (userData) => {
   const { email, password } = userData;
   const user = await findUser({ email });
   if (!user) {
@@ -45,7 +45,7 @@ export const signInUser = async (userData) => {
   };
 };
 
-export const invalidateUserToken = async (userId) => {
+const invalidateUserToken = async (userId) => {
   const user = await findUser({ id: userId });
   if (!user || !user.token) {
     throw HttpError(401, "Not authorized");
@@ -54,11 +54,19 @@ export const invalidateUserToken = async (userId) => {
   return user;
 };
 
-export const updateSubscription = async (email, subscription) => {
+const updateSubscription = async (email, subscription) => {
   const user = await findUser({ email });
   if (!user) {
     throw HttpError(404, "User not found");
   }
   await user.update({ subscription });
   return user;
+};
+
+export default {
+  findUser,
+  signUpUser,
+  signInUser,
+  invalidateUserToken,
+  updateSubscription,
 };

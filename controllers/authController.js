@@ -1,4 +1,4 @@
-import * as authServices from "../services/authServices.js";
+import authServices from "../services/authServices.js";
 
 const signUpController = async (req, res) => {
   const newUser = await authServices.signUpUser(req.body);
