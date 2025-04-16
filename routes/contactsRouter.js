@@ -13,8 +13,11 @@ import {
   updateContactSchema,
 } from "../schemas/contactsSchemas.js";
 import errorHandler from "../decorators/errorHandler.js";
+import authenticate from "../middlewares/authenticate.js";
 
 const contactsRouter = express.Router();
+
+contactsRouter.use(authenticate);
 
 contactsRouter.get("/", errorHandler(getAllContacts));
 
