@@ -1,6 +1,7 @@
 import exrepress from "express";
 import validateBody from "../helpers/validateBody.js";
 import authController from "../controllers/authController.js";
+import upload from "../middlewares/upload.js";
 
 import authenticate from "../middlewares/authenticate.js";
 
@@ -37,6 +38,14 @@ authRouter.patch(
   "/subscription",
   authenticate,
   errorHandler(authController.updateSubscriptionController)
+);
+
+authRouter.patch(
+  "/avatar",
+  authenticate,
+
+  upload.single("avatar"),
+  errorHandler(authController.updateAvatarController)
 );
 
 export default authRouter;
