@@ -3,7 +3,6 @@ import fs from "node:fs/promises";
 import path from "node:path";
 
 const avatarDir = path.resolve("public", "avatars");
-console.log("avatarDir :>> ", avatarDir);
 
 const signUpController = async (req, res) => {
   const newUser = await authServices.signUpUser(req.body);
