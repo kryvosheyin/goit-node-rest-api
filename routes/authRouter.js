@@ -5,7 +5,11 @@ import upload from "../middlewares/upload.js";
 
 import authenticate from "../middlewares/authenticate.js";
 
-import { signUpSchema, signInSchema } from "../schemas/authSchemas.js";
+import {
+  signUpSchema,
+  signInSchema,
+  verifyUserSchema,
+} from "../schemas/authSchemas.js";
 import errorHandler from "../decorators/errorHandler.js";
 
 const authRouter = exrepress.Router();
@@ -20,6 +24,17 @@ authRouter.post(
   "/login",
   validateBody(signInSchema),
   errorHandler(authController.signInController)
+);
+
+authRouter.get(
+  "/verify/:verificationToken",
+  errorHandler(authController.verifyUserController)
+);
+
+authRouter.post(
+  "/verify",
+  validateBody(verifyUserSchema),
+  errorHandler(authController.resendVerificationController)
 );
 
 authRouter.get(

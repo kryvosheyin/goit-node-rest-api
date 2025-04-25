@@ -12,3 +12,7 @@ export const signInSchema = Joi.object({
   email: Joi.string().pattern(emailRegex).required(),
   password: Joi.string().min(8).max(30).required(),
 });
+
+export const verifyUserSchema = Joi.object({
+  email: Joi.string().pattern(emailRegex).required(),
+});

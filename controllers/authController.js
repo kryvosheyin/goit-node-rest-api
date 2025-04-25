@@ -14,6 +14,16 @@ const signUpController = async (req, res) => {
   });
 };
 
+const verifyUserController = async (req, res) => {
+  const { verificationToken } = req.params;
+  await authServices.verifyUser(verificationToken);
+  res.status(200).json({ message: "Verification successful" });
+};
+
+const resendVerificationController = async (req, res) => {
+  const { email } = req.body;
+};
+
 const signInController = async (req, res) => {
   const { email, password } = req.body;
   const token = await authServices.signInUser({ email, password });
@@ -62,4 +72,6 @@ export default {
   userLogoUtController,
   updateSubscriptionController,
   updateAvatarController,
+  verifyUserController,
+  resendVerificationController,
 };

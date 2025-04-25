@@ -4,6 +4,8 @@ import bcrypt from "bcrypt";
 import dotenv from "dotenv";
 import gravatar from "gravatar";
 import { generateToken } from "../helpers/jwt.js";
+import sendEmail from "../helpers/sendEmail.js";
+import { nanoid } from "nanoid";
 
 dotenv.config();
 
@@ -18,13 +20,32 @@ const signUpUser = async (userData) => {
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
+  const verificationToken = nanoid();
 
   const user = await User.create({
     ...userData,
     avatarURL,
     password: hashedPassword,
+    verificationToken,
   });
+
+  const verifyEmailData = {
+    to: email,
+    subject: "Verify email",
+    html: `<a target="_blank" href="${process.env.BASE_URL}/api/auth/verify/${verificationToken}">Click to verify the email</a>`,
+  };
+
+  await sendEmail(verifyEmailData);
   return user;
+};
+
+const verifyUser = async (verificationToken) => {
+  console.log(verificationToken);
+  const user = await findUser({ verificationToken });
+  if (!user) {
+    throw HttpError(404, "User not found");
+  }
+  return await user.update({ verificationToken: null, verify: true });
 };
 
 const signInUser = async (userData) => {
@@ -36,6 +57,9 @@ const signInUser = async (userData) => {
   const IsValidPassord = await bcrypt.compare(password, user.password);
   if (!IsValidPassord) {
     throw HttpError(401, "Email or password is wrong");
+  }
+  if (!user.verify) {
+    throw HttpError(401, "Please verify your email");
   }
 
   const payload = { email };
@@ -84,4 +108,5 @@ export default {
   invalidateUserToken,
   updateSubscription,
   updateAvatarUrl,
+  verifyUser,
 };
