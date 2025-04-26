@@ -43,7 +43,6 @@ authRouter.patch(
 authRouter.patch(
   "/avatar",
   authenticate,
-
   upload.single("avatar"),
   errorHandler(authController.updateAvatarController)
 );

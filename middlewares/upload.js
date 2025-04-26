@@ -21,7 +21,6 @@ const limits = {
 
 const fileFilter = (req, file, callback) => {
   const extension = file.originalname.split(".").pop().trim().toLowerCase();
-  console.log("extension :>> ", extension);
   if (extension !== "jpg" && extension !== "jpeg" && extension !== "png") {
     return callback(
       HttpError(400, "Supperted file types are .jpg, .jpeg, .png")

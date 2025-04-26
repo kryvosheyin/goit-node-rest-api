@@ -10,7 +10,7 @@ const signUpController = async (req, res) => {
   res.status(201).json({
     email: newUser.email,
     subscription: newUser.subscription,
-    avatar: newUser.avatarUrl,
+    avatar: newUser.avatarURL,
   });
 };
 
@@ -49,7 +49,7 @@ const updateAvatarController = async (req, res) => {
   const { path: originalPath, filename } = req.file;
   const newPath = path.join(avatarDir, filename);
   await fs.rename(originalPath, newPath);
-  const avatar = path.join("public", "avatars", filename);
+  const avatar = path.join("avatars", filename);
 
   await authServices.updateAvatarUrl(email, avatar);
   res.status(200).json({ avatarUrl: avatar });

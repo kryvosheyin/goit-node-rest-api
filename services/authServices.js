@@ -11,7 +11,7 @@ const findUser = async (query) => User.findOne({ where: query });
 
 const signUpUser = async (userData) => {
   const { email, password } = userData;
-  const avatarUrl = gravatar.url(email, { protocol: "http", s: "100" });
+  const avatarURL = gravatar.url(email, { protocol: "http", s: "100" });
   const existingUser = await findUser({ email });
   if (existingUser) {
     throw HttpError(409, "Email in use");
@@ -21,7 +21,7 @@ const signUpUser = async (userData) => {
 
   const user = await User.create({
     ...userData,
-    avatarUrl,
+    avatarURL,
     password: hashedPassword,
   });
   return user;
@@ -74,7 +74,7 @@ const updateAvatarUrl = async (email, avatar) => {
   if (!user) {
     throw HttpError(404, "User not found");
   }
-  await user.update({ avatarUrl: avatar });
+  await user.update({ avatarURL: avatar });
 };
 
 export default {
