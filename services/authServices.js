@@ -11,6 +11,16 @@ dotenv.config();
 
 const findUser = async (query) => User.findOne({ where: query });
 
+const sendVerificationEmail = async (email, verificationToken) => {
+  const verifyEmailData = {
+    to: email,
+    subject: "Verify email",
+    html: `<a target="_blank" href="${process.env.BASE_URL}/api/auth/verify/${verificationToken}">Click to verify the email</a>`,
+  };
+
+  await sendEmail(verifyEmailData);
+};
+
 const signUpUser = async (userData) => {
   const { email, password } = userData;
   const avatarURL = gravatar.url(email, { protocol: "http", s: "100" });
@@ -29,23 +39,27 @@ const signUpUser = async (userData) => {
     verificationToken,
   });
 
-  const verifyEmailData = {
-    to: email,
-    subject: "Verify email",
-    html: `<a target="_blank" href="${process.env.BASE_URL}/api/auth/verify/${verificationToken}">Click to verify the email</a>`,
-  };
-
-  await sendEmail(verifyEmailData);
+  await sendVerificationEmail(email, verificationToken);
   return user;
 };
 
 const verifyUser = async (verificationToken) => {
-  console.log(verificationToken);
   const user = await findUser({ verificationToken });
   if (!user) {
     throw HttpError(404, "User not found");
   }
   return await user.update({ verificationToken: null, verify: true });
+};
+
+const resendVerificationEmail = async (email) => {
+  const user = await findUser({ email });
+  if (!user) {
+    throw HttpError(404, "User not found");
+  }
+  if (user.verify) {
+    throw HttpError(400, "Verification has already been passed");
+  }
+  return await sendVerificationEmail(user.email, user.verificationToken);
 };
 
 const signInUser = async (userData) => {
@@ -109,4 +123,5 @@ export default {
   updateSubscription,
   updateAvatarUrl,
   verifyUser,
+  resendVerificationEmail,
 };
