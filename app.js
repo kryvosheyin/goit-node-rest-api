@@ -6,13 +6,14 @@ import authRouter from "./routes/authRouter.js";
 import contactsRouter from "./routes/contactsRouter.js";
 import errorMiddleware from "./middlewares/errorMiddleware.js";
 
-const PORT = process.env.PORT || 3000;
+// const PORT = process.env.PORT || 3000;
 
 const app = express();
 
 app.use(morgan("tiny"));
 app.use(cors());
 app.use(express.json());
+app.use(express.static("public"));
 
 app.use("/api/auth", authRouter);
 app.use("/api/contacts", contactsRouter);
@@ -23,6 +24,4 @@ app.use((_, res) => {
 
 app.use(errorMiddleware);
 
-app.listen(PORT, () => {
-  console.log(`Server is running. Use our API on port: ${PORT}`);
-});
+export default app;

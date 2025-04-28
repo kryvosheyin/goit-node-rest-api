@@ -3,8 +3,6 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-console.log(process.env.DATABASE_DIALECT);
-
 const sequelize = new Sequelize({
   dialect: process.env.DATABASE_DIALECT,
   username: process.env.DATABASE_USERNAME,
